@@ -16,7 +16,7 @@ public class DiscountManager
                                      (discountForLoyaltyInPercentage * priceAfterDiscount);
                 break;
             case AccountStatus.ValuableCustomer:
-                priceAfterDiscount = (0.7m * price);
+                priceAfterDiscount = (price - (0.3m * price));
                 priceAfterDiscount = priceAfterDiscount -
                                      (discountForLoyaltyInPercentage * priceAfterDiscount);
                 break;
