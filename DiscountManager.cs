@@ -25,6 +25,8 @@ public class DiscountManager
                 priceAfterDiscount = priceAfterDiscount -
                                      (discountForLoyaltyInPercentage * priceAfterDiscount);
                 break;
+            default:
+                throw new NotImplementedException();
         }
 
         return priceAfterDiscount;
