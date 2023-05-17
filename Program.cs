@@ -6,31 +6,31 @@
         {
             string line;
 
-            decimal amount;
+            decimal price;
             do
             {
-                Console.WriteLine("Enter amount:");
+                Console.WriteLine("Enter price:");
                 line = Console.ReadLine();
-            } while (!decimal.TryParse(line, out amount));
+            } while (!decimal.TryParse(line, out price));
 
-            int type;
+            int accountStatus;
             do
             {
-                Console.WriteLine("Enter type:");
+                Console.WriteLine("Enter account status:");
                 line = Console.ReadLine();
-            } while (!int.TryParse(line, out type));
+            } while (!int.TryParse(line, out accountStatus));
 
-            int years;
+            int timeOfHavingAccountInYears;
             do
             {
-                Console.WriteLine("Enter years:");
+                Console.WriteLine("Enter time of having account in years:");
                 line = Console.ReadLine();
-            } while (!int.TryParse(line, out years));
+            } while (!int.TryParse(line, out timeOfHavingAccountInYears));
 
-            var calculator = new Class1();
-            var result = calculator.Calculate(amount, type, years);
+            var discountManager = new DiscountManager();
+            var priceAfterDiscount = discountManager.ApplyDiscount(price, accountStatus, timeOfHavingAccountInYears);
 
-            Console.WriteLine("Result: " + result);
+            Console.WriteLine("Price after discount: " + priceAfterDiscount);
         }
 
     }
