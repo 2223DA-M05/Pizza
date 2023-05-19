@@ -1,7 +1,14 @@
-﻿public static class Program
+﻿using Microsoft.Extensions.Configuration;
+using Microsoft.Extensions.DependencyInjection;
+using Microsoft.Extensions.Hosting;
+
+public static class Program
 {
-    public static void Main()
+    public async static Task Main(string[] args)
     {
+        using IHost host = Host.CreateDefaultBuilder(args).Build();
+        var discountManager = new DiscountManager(new ConfigurableAccountDiscountCalculatorFactory(host.Services.GetService<IConfiguration>()), new DefaultLoyaltyDiscountCalculator());
+
         while (true)
         {
             string line;
@@ -27,11 +34,11 @@
                 line = Console.ReadLine();
             } while (!int.TryParse(line, out timeOfHavingAccountInYears));
 
-            var discountManager = new DiscountManager(new DefaultAccountDiscountCalculatorFactory(), new DefaultLoyaltyDiscountCalculator());
+            
             var priceAfterDiscount = discountManager.ApplyDiscount(price, accountStatus, timeOfHavingAccountInYears);
 
             Console.WriteLine("Price after discount: " + priceAfterDiscount);
         }
-
+        await host.RunAsync();
     }
 }
