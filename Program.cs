@@ -13,12 +13,12 @@
                 line = Console.ReadLine();
             } while (!decimal.TryParse(line, out price));
 
-            int accountStatus;
+            AccountStatus accountStatus;
             do
             {
                 Console.WriteLine("Enter account status:");
                 line = Console.ReadLine();
-            } while (!int.TryParse(line, out accountStatus));
+            } while (!Enum.TryParse<AccountStatus>(line, out accountStatus));
 
             int timeOfHavingAccountInYears;
             do
@@ -27,7 +27,7 @@
                 line = Console.ReadLine();
             } while (!int.TryParse(line, out timeOfHavingAccountInYears));
 
-            var discountManager = new DiscountManager();
+            var discountManager = new DiscountManager(new DefaultAccountDiscountCalculatorFactory(), new DefaultLoyaltyDiscountCalculator());
             var priceAfterDiscount = discountManager.ApplyDiscount(price, accountStatus, timeOfHavingAccountInYears);
 
             Console.WriteLine("Price after discount: " + priceAfterDiscount);
