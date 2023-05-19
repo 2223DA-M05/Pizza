@@ -6,8 +6,8 @@ public static class Program
 {
     public async static Task Main(string[] args)
     {
-        using IHost host = Host.CreateDefaultBuilder(args).Build();
-        var discountManager = new DiscountManager(new ConfigurableAccountDiscountCalculatorFactory(host.Services.GetService<IConfiguration>()), new DefaultLoyaltyDiscountCalculator());
+        using IHost host = Host.CreateDefaultBuilder(args).ConfigureServices(ConfigureServices).Build();
+        var discountManager = new DiscountManager(host.Services.GetService<IAccountDiscountCalculatorFactory>(), new DefaultLoyaltyDiscountCalculator());
 
         while (true)
         {
@@ -40,5 +40,9 @@ public static class Program
             Console.WriteLine("Price after discount: " + priceAfterDiscount);
         }
         await host.RunAsync();
+    }
+
+    private static void ConfigureServices(IServiceCollection services) {
+        services.AddSingleton<IAccountDiscountCalculatorFactory, ConfigurableAccountDiscountCalculatorFactory>();
     }
 }
