@@ -1,13 +1,18 @@
-﻿using Microsoft.Extensions.Configuration;
-using Microsoft.Extensions.DependencyInjection;
-using Microsoft.Extensions.Hosting;
+﻿using MicroResolver;
+using Microsoft.Extensions.Configuration;
 
 public static class Program
 {
     public async static Task Main(string[] args)
     {
-        using IHost host = Host.CreateDefaultBuilder(args).ConfigureServices(ConfigureServices).Build();
-        var discountManager = new DiscountManager(host.Services.GetService<IAccountDiscountCalculatorFactory>(), new DefaultLoyaltyDiscountCalculator());
+        var resolver = ObjectResolver.Create();
+        resolver.Register<IAccountDiscountCalculatorFactory, DefaultAccountDiscountCalculatorFactory>(Lifestyle.Singleton);
+        resolver.Register<ILoyaltyDiscountCalculator, DefaultLoyaltyDiscountCalculator>(Lifestyle.Singleton);
+        resolver.Register<IDiscountManager, DiscountManager>(Lifestyle.Singleton);
+        resolver.Register<IConfiguration, TestConfiguration>();
+
+        resolver.Compile();
+        var discountManager = resolver.Resolve<IDiscountManager>();
 
         while (true)
         {
@@ -39,10 +44,5 @@ public static class Program
 
             Console.WriteLine("Price after discount: " + priceAfterDiscount);
         }
-        await host.RunAsync();
-    }
-
-    private static void ConfigureServices(IServiceCollection services) {
-        services.AddSingleton<IAccountDiscountCalculatorFactory, ConfigurableAccountDiscountCalculatorFactory>();
     }
 }
