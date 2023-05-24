@@ -1,4 +1,4 @@
-public class DiscountManager
+public class DiscountManager : IDiscountManager
 {
     private readonly IAccountDiscountCalculatorFactory _factory;
     private readonly ILoyaltyDiscountCalculator _loyaltyDiscountCalculator;
@@ -13,7 +13,7 @@ public class DiscountManager
     {
         decimal priceAfterDiscount = 0;
         priceAfterDiscount = _factory.GetAccountDiscountCalculator(accountStatus).ApplyDiscount(price);
-        priceAfterDiscount = _loyaltyDiscountCalculator.ApplyDiscount(priceAfterDiscount,timeOfHavingAccountInYears);
+        priceAfterDiscount = _loyaltyDiscountCalculator.ApplyDiscount(priceAfterDiscount, timeOfHavingAccountInYears);
         return priceAfterDiscount;
     }
 }
