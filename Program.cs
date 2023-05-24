@@ -1,18 +1,18 @@
-﻿using MicroResolver;
-using Microsoft.Extensions.Configuration;
+﻿using Microsoft.Extensions.Configuration;
+using SimpleInjector;
 
 public static class Program
 {
     public async static Task Main(string[] args)
     {
-        var resolver = ObjectResolver.Create();
-        resolver.Register<IAccountDiscountCalculatorFactory, DefaultAccountDiscountCalculatorFactory>(Lifestyle.Singleton);
-        resolver.Register<ILoyaltyDiscountCalculator, DefaultLoyaltyDiscountCalculator>(Lifestyle.Singleton);
-        resolver.Register<IDiscountManager, DiscountManager>(Lifestyle.Singleton);
-        resolver.Register<IConfiguration, TestConfiguration>();
+        var container = new Container();
+        container.Register<IAccountDiscountCalculatorFactory, ConfigurableAccountDiscountCalculatorFactory>(Lifestyle.Singleton);
+        container.Register<ILoyaltyDiscountCalculator, DefaultLoyaltyDiscountCalculator>(Lifestyle.Singleton);
+        container.Register<IDiscountManager, DiscountManager>(Lifestyle.Singleton);
+        container.RegisterInstance<IConfiguration>(new ConfigurationBuilder().AddJsonFile("appsettings.json").Build());
 
-        resolver.Compile();
-        var discountManager = resolver.Resolve<IDiscountManager>();
+        container.Verify();
+        var discountManager = container.GetInstance<IDiscountManager>();
 
         while (true)
         {
